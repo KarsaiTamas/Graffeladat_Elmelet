@@ -22,6 +22,15 @@ namespace GrafFeladat_CSharp
 
             Console.WriteLine(graf);
             graf.SzelessegiBejar(2);
+            Console.WriteLine();
+            graf.MelysegiBejar(1);
+            Console.WriteLine(graf.Osszefuggo());
+            Console.WriteLine(graf.Feszitofa());
+            
+            foreach (var item in graf.MohoSzinezes())
+            {
+                Console.WriteLine(item);
+            }
             Console.ReadLine();
         }
     }

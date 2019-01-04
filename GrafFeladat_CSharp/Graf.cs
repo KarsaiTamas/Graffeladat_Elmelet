@@ -74,13 +74,13 @@ namespace GrafFeladat_CSharp
             bejart.Add(kezdopont);
             while (kovetkezok.Count != 0)
             {
-               int k =kovetkezok[0];
+                kezdopont = kovetkezok[0];
                 kovetkezok.RemoveAt(0);
 
-                Console.WriteLine(this.csucsok[k]);
+                Console.WriteLine(this.csucsok[kezdopont]);
                 foreach (var el in this.elek)
                 {
-                    if (el.Csucs1==k && !bejart.Contains(el.Csucs2))
+                    if (el.Csucs1 == kezdopont && !bejart.Contains(el.Csucs2))
                     {
                         kovetkezok.Add(el.Csucs2);
                         bejart.Add(el.Csucs2);
@@ -89,8 +89,138 @@ namespace GrafFeladat_CSharp
             }
         }
 
-        
-    // Jöhet a sor szerinti következő elem*/
+        public void MelysegiBejar(int kezdopont)
+        {
+            List<int> bejart = new List<int>();
+            bejart.Add(kezdopont);
+            this.MelysegiBejarRekurziv(kezdopont, bejart);
+
+
+
+        }
+
+        public void MelysegiBejarRekurziv(int kezdopont, List<int> bejart)
+        {
+            Console.WriteLine(this.csucsok[kezdopont]);
+            foreach (var el in this.elek)
+            {
+                if (el.Csucs1==kezdopont && !bejart.Contains(el.Csucs2))
+                {
+                    bejart.Add(el.Csucs2);
+                    this.MelysegiBejarRekurziv(el.Csucs2, bejart);
+                }
+            }
+        }
+
+        public bool Osszefuggo()
+        {
+            List<int> bejart = new List<int>();
+            List<int> kovetkezok = new List<int>();
+
+            kovetkezok.Add(0);
+            bejart.Add(0);
+            int k;
+            while (kovetkezok.Count!=0)
+            {
+                k = kovetkezok[0];
+                kovetkezok.RemoveAt(0);
+
+                foreach (var el in this.elek)
+                {
+                    if (el.Csucs1==k && !bejart.Contains(el.Csucs2))
+                    {
+                        kovetkezok.Add(el.Csucs2);
+                        bejart.Add(el.Csucs2);
+                    }
+                }
+
+            }
+            return (bejart.Count==this.csucsokSzama?true:false);
+        }
+
+        public Graf Feszitofa()
+        {
+            Graf fa = new Graf(this.csucsokSzama);
+            List<int> bejart = new List<int>();
+            List<int> kovetkezok= new List<int>();
+            kovetkezok.Add(0);
+            bejart.Add(0);
+
+            int k;
+            Console.WriteLine("Feszítőfa");
+            while (kovetkezok.Count!=0)
+            {
+                k = kovetkezok[0];
+                kovetkezok.RemoveAt(0);
+                Console.WriteLine(k);
+                foreach (var el in this.elek)
+                {
+                    if (el.Csucs1==k )
+                    {
+                        if (!bejart.Contains(el.Csucs2))
+                        {
+                            bejart.Add(el.Csucs2);
+                            kovetkezok.Add(el.Csucs2);
+                            fa.Hozzaad(el.Csucs1,el.Csucs2);
+                        }
+                    }
+                }
+
+            }
+            return fa;
+
+        }
+
+        public bool Tartalmaz_Kulcsot(List<Szotar> szotar,int szam)
+        {
+            foreach (var item in szotar)
+            {
+                if (item.csucs.Id==szam)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
+        public List<Szotar>MohoSzinezes()
+        {
+            List<Szotar> szinezes = new List<Szotar>();
+            int max_szin = this.csucsokSzama;
+            List<int> valaszthatoSzinek = new List<int>();
+            for (int i = 0; i < this.csucsokSzama; i++)
+            {
+                valaszthatoSzinek.Add(i);
+
+                foreach (var el in this.elek)
+                {
+                    if (el.Csucs1==i)
+                    {
+                        if (Tartalmaz_Kulcsot(szinezes,el.Csucs2))
+                        {
+                           int szin = szinezes[el.Csucs2].csucs.Id;
+                            valaszthatoSzinek.Remove(szin);
+                            Console.WriteLine("asd"+i+" "+ szin);
+                        }
+                    }
+
+                }
+                valaszthatoSzinek.Sort();
+                int valasztott_szin = valaszthatoSzinek[0];
+                szinezes.Add(new Szotar(new Csucs(i), valasztott_szin));
+
+
+
+            }
+
+
+
+            return szinezes;
+        }
+
+        // Jöhet a sor szerinti következő elem*/
         public override string ToString()
         {
             string str = "Csucsok:\n";

@@ -10,6 +10,7 @@
         /// </summary>
         int id;
 
+
         /// <summary>
         /// Létrehoz egy új csúcsot a gráfban
         /// </summary>
@@ -18,6 +19,8 @@
         {
             this.id = id;
         }
+
+        public int Id { get => id; set => id = value; }
 
         public override string ToString()
         {
